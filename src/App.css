@@ -10,6 +10,7 @@
  
 * {
   box-sizing: border-box;
+  user-select: none;
 }
 
 /* Ensure base stacking context for the main div */
@@ -17,7 +18,7 @@
   z-index: 0;
  
 }
-
+ 
 /* Create the ticks using the ::before pseudo-element */
 .status-display::before {
   content: '';

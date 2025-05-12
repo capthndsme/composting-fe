@@ -10,9 +10,16 @@ import type {
   GetFullStateHookResponse,
   SensorData,
 } from '../types/api';
+import { toast } from 'sonner';
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL ?? 'http://compost-be.hyprhost.online:8900';
-
+export const TRANSLATIONS: Record<ServerStateKey, string> = {
+light: "Light",
+shredder: "Shredder",
+resetFlag: "Reset",
+stopFlag: "Stop",
+waterPump: "Water pump"
+}
 // --- Query Keys Factory ---
 export const serverApiQueryKeys = {
   all: ['serverApi'] as const,
@@ -80,6 +87,8 @@ const updateServerStateByKey = async (params: {
     const errorText = await response.text();
     throw new Error(`[POST /state/${key} ${response.status}]: ${errorText || response.statusText}`);
   }
+  toast.success(`${TRANSLATIONS[key]} turned ${value ? 'on' : 'off'} successfully`);
+   console.log(`${TRANSLATIONS[key]} turned ${value ? 'on' : 'off'} successfully`);
   // Server sends JSON: { "keyName": 0_or_1 } (numbers)
   return response.json() as Promise<UpdateStateHookResponse>;
 };

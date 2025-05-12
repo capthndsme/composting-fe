@@ -1,4 +1,4 @@
-import { useGetFullServerState, useUpdateServerState } from "@/hooks/useServerApi";
+import { TRANSLATIONS, useGetFullServerState, useUpdateServerState } from "@/hooks/useServerApi";
 import type { ServerStateKey } from "@/types/api";
 import { useEffect } from "react";
 
@@ -67,7 +67,7 @@ const Toggles = () => {
                      }}
                   />
                   <div className="toggle-switch"></div><br/>
-                  <div className="toggle-label bg-yellow-400 inline-block px-2 py-[2px] text-sm rounded-md">{key}</div>
+                  <div className="toggle-label bg-yellow-400 inline-block px-2 py-[2px] text-sm rounded-md">{ TRANSLATIONS[key as ServerStateKey] ?? "Unknown"}</div>
                </label>
             );
          })}

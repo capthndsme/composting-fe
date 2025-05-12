@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrestartScreen from "./screens/PrestartScreen";
 import FullsizeSpinner from "./components/FullsizeSpinner";
+import { Toaster } from "./components/ui/sonner";
 
 
 const Home = lazy(() => import('@/screens/Home'))
@@ -16,6 +17,7 @@ function App() {
    }, []);
    return (
       <>
+         <Toaster />
          {loading && <PrestartScreen dismiss={() => setLoading(false)} />}
          <Suspense fallback={<FullsizeSpinner />}>
                    
