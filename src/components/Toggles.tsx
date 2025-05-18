@@ -53,9 +53,10 @@ const Toggles = () => {
 	<span class="toggle-label">Bluetooth</span>
 </label>
    */
+  const filteredData = Object.entries(serverStates.data ?? []).filter(([s]) => s !== "shredder");
    return (
       <div className="grid grid-cols-3 gap-4 px-2 py-8">
-         {Object.entries(serverStates.data).map(([key, value]) => {
+         {filteredData.map(([key, value]) => {
             return (
                <label key={key} className="toggle">
                   <input

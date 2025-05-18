@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL ?? 'http://compost-be.hyprhost.online:8900';
 export const TRANSLATIONS: Record<ServerStateKey, string> = {
-light: "Light",
+light: "Fan",
 shredder: "Shredder",
 resetFlag: "Reset",
 stopFlag: "Stop",
