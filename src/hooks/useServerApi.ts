@@ -20,11 +20,22 @@ resetFlag: "Reset",
 stopFlag: "Stop",
 waterPump: "Water pump"
 }
+
+// --- Types for History ---
+export type HistoryDataPoint = {
+  day: string;
+  average_val: number;
+  min_val: number;
+  max_val: number;
+};
+
 // --- Query Keys Factory ---
 export const serverApiQueryKeys = {
   all: ['serverApi'] as const,
   fullState: () => [...serverApiQueryKeys.all, 'fullState'] as const,
   stateKey: (key: ServerStateKey) => [...serverApiQueryKeys.all, 'state', key] as const,
+  history: (type: string, start?: string, end?: string) => 
+    [...serverApiQueryKeys.all, 'history', type, start, end] as const,
 };
 
 // --- Helper Functions for API Calls ---
@@ -113,6 +124,37 @@ const postLogEntry = async (payload: LogDataPayload): Promise<LogResponse> => {
   throw new Error(`Unexpected log response: ${text}`);
 };
 
+/**
+ * API call to fetch historical data.
+ * GET /history?type=...&start=...&end=...
+ */
+const fetchHistoryData = async (params: {
+  type: string;
+  start?: string;
+  end?: string;
+}): Promise<HistoryDataPoint[]> => {
+  const { type, start, end } = params;
+  
+  const searchParams = new URLSearchParams({ type });
+  if (start) searchParams.append('start', start);
+  if (end) searchParams.append('end', end);
+  
+  const response = await fetch(`${API_BASE_URL}/history?${searchParams.toString()}`);
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`[GET /history ${response.status}]: ${errorText || response.statusText}`);
+  }
+  
+  const data = await response.json();
+  
+  // Handle error response from your controller
+  if (data.error) {
+    throw new Error(data.error);
+  }
+  
+  return data as HistoryDataPoint[];
+};
+
 // --- TanStack Query Hooks ---
 
 /**
@@ -131,8 +173,6 @@ export const useGetServerState = (
   });
 };
 
-
-
 export const useGetSensorData = (
   options: { enabled?: boolean; staleTime?: number }
 ) => {
@@ -148,8 +188,29 @@ export const useGetSensorData = (
     },
     ...options,
   });
-  
-}
+};
+
+/**
+ * Hook to fetch historical data.
+ * @param type The data type to fetch history for (required).
+ * @param start Optional start date (YYYY-MM-DD).
+ * @param end Optional end date (YYYY-MM-DD).
+ * @param options Optional TanStack Query options.
+ */
+export const useGetHistoryData = (
+  type: string,
+  start?: string,
+  end?: string,
+  options?: { enabled?: boolean; staleTime?: number }
+) => {
+  return useQuery<HistoryDataPoint[], Error, HistoryDataPoint[], QueryKey>({
+    queryKey: serverApiQueryKeys.history(type, start, end),
+    queryFn: () => fetchHistoryData({ type, start, end }),
+    enabled: !!type && (options?.enabled !== false), // Only run if type is provided
+    staleTime: 5 * 60 * 1000, // 5 minutes default stale time for historical data
+    ...options,
+  });
+};
 
 /**
  * Hook to fetch the full server state.

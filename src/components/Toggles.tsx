@@ -1,5 +1,6 @@
 import { TRANSLATIONS, useGetFullServerState, useUpdateServerState } from "@/hooks/useServerApi";
 import type { ServerStateKey } from "@/types/api";
+import { Fan, GlassWater } from "lucide-react";
 import { useEffect } from "react";
 
 const Toggles = () => {
@@ -53,12 +54,21 @@ const Toggles = () => {
 	<span class="toggle-label">Bluetooth</span>
 </label>
    */
-  const filteredData = Object.entries(serverStates.data ?? []).filter(([s]) => s !== "shredder");
+  const filteredData = Object.entries(serverStates.data ?? []).filter(([s]) => !(['shredder', 'resetFlag', 'stopFlag']).includes(s));
    return (
-      <div className="grid grid-cols-3 gap-4 px-2 py-8">
+      <div className="grid grid-cols-2 gap-6 px-6 py-8">
          {filteredData.map(([key, value]) => {
             return (
-               <label key={key} className="toggle">
+               <label key={key} className="toggle bg-gray-300 rounded-md py-4" >
+                 <div className="flex items-center justify-center">
+                   {
+                     key === "light" 
+                     ? <Fan size={48}/>
+                     : <GlassWater size={48} />
+                  }
+                 </div>
+                  <br/>
+            
                   <input
                      className="toggle-checkbox"
                      type="checkbox"

@@ -57,7 +57,7 @@ const Home = () => {
                </div>
             </div>
          </div>
-         <div className="bg-green-400  flex-grow-1 flex-shrink-1 ">
+         <div className="bg-green-400  flex-grow-1 flex-shrink-1 pb-32">
             <div className="grid grid-cols-2 grid-rows-2 place-items-center">
                <GasGauge value={data?.data?.temperature} />
                <GasGauge value={data?.data?.soil_moisture} label="Soil Moisture" unit="%" min={0} max={100} />
@@ -65,7 +65,7 @@ const Home = () => {
                <GasGauge value={data?.data?.ph_level} label="pH level" unit="" min={0} max={20} />
             </div>
 
-            <Toggles />
+           
          </div>
       </div>
    );
