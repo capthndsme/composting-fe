@@ -1,6 +1,6 @@
 import GasGauge from "@/components/GasGauge";
 import StatusDisplay from "@/components/StatusDisplay";
-import Toggles from "@/components/Toggles";
+ 
 import { useGetSensorData } from "@/hooks/useServerApi";
 import { History } from "lucide-react";
 import { useEffect, useState } from "react";
