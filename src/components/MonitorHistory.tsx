@@ -8,17 +8,6 @@ export type GraphableType =
   | "ph_level"
   | "temperature"
   | "soil_moisture";
-
-const MonitoringHistoryPage = () => {
-  const [selectedType, setSelectedType] = useState('soil_moisture');
-  const [currentPage, setCurrentPage] = useState(0);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
-  const itemsPerPage = 11; // 11 days per page
-  
-  // Using your hook to fetch data based on selected type
-  const { data: historyData, isLoading, error } = useGetHistoryData(selectedType);
-  
   const typeLabels = {
     soil_moisture: 'Soil Moisture',
     humidity: 'Humidity',
@@ -32,8 +21,46 @@ const MonitoringHistoryPage = () => {
     ph_level: '',
     temperature: '°C'
   };
+
+
+
+  const MonitoringHistoryPage = () => {
+  const [selectedType, setSelectedType] = useState('soil_moisture');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
-  // Generate dates from today going backward
+  const itemsPerPage = 7; // 7 days per page as intended
+  
+  // Calculate the date range for the current page
+  const today = new Date();
+  
+  // For page 0: today to today-6 (7 days)
+  // For page 1: today-7 to today-13 (7 days)
+  // For page 2: today-14 to today-20 (7 days)
+  const startOffset = currentPage * itemsPerPage;
+  const endOffset = startOffset + itemsPerPage - 1;
+
+  // Start date is the older date (further back in time)
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - endOffset);
+  
+  // End date is the newer date (closer to today)
+  const endDate = new Date(today);
+  endDate.setDate(today.getDate() - startOffset);
+
+  const startDateString = startDate.toISOString().split('T')[0];
+  const endDateString = endDate.toISOString().split('T')[0];
+
+  console.log(`Page ${currentPage}: ${startDateString} to ${endDateString}`);
+
+  // Now pass these to your hook
+  const { data: historyData, isLoading, error } = useGetHistoryData(
+    selectedType, 
+    startDateString, 
+    endDateString
+  );
+
+  // Generate dates for display (from newest to oldest within the page)
   const generateDates = (page = 0) => {
     const dates = [];
     const today = new Date();
@@ -44,7 +71,7 @@ const MonitoringHistoryPage = () => {
       date.setDate(today.getDate() - i);
       dates.push({
         dayNumber: i + 1,
-        dateString: date.toISOString().split('T')[0], // YYYY-MM-DD format
+        dateString: date.toISOString().split('T')[0],
         displayDate: date.toLocaleDateString('en-US', {
           month: 'short',
           day: 'numeric'
