@@ -19,15 +19,18 @@ const Logs = () => {
          </div>
          <div className="p-4">
             <div className="bg-gray-300 p-4 rounded-lg">
-               {data?.map((log, index) => (
-                  <div key={index} className="border-b border-gray-400 py-2 last:border-b-0 text-sm">
-                     Date: {new Date(log.createdAt).toLocaleDateString()}
+               {data?.map((log, index) => {
+                const timed = new Date(log.createdAt);
+                return <div key={`${index}_${timed.getTime()}`} className="border-b border-gray-400 py-2 last:border-b-0 text-sm">
+                     Date: {timed.toLocaleString()}
                      <br />
                      Message: {log.message}
                      <br />
                      Event: {log.type}
                   </div>
-               ))}
+               }
+                  
+               )}
             </div>
          </div>
       </div>
