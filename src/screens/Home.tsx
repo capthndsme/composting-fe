@@ -65,7 +65,9 @@ const Home = () => {
                <GasGauge value={data?.data?.ph_level} label="pH level" unit="" min={0} max={20} />
             </div>
 
-           
+           <Link to="/logs" 
+           className="w-48 text-white! bg-black  inline-block mt-8 py-2 px-4 rounded-md  "
+           >System Logs</Link>
          </div>
       </div>
    );

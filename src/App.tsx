@@ -7,24 +7,33 @@ import { Toaster } from "./components/ui/sonner";
 import { Gauge, Info, Settings2 } from "lucide-react";
 import FullControls from "./components/FullControls";
 import FullAbout from "./components/FullAbout";
-import MonitoringHistory from "./components/MonitorHistory";
+ 
+import { useAuth } from "./components/AuthContext";
+import { Login } from "./components/LoginPage";
 
 const Home = lazy(() => import("@/screens/Home"));
+const Logs = lazy(() => import("@/screens/Logs"));
+const MonitoringHistory = lazy(() => import("@/screens/MonitorHistory"));
+
 function App() {
    const [loading, setLoading] = useState(true);
 
+   const auth = useAuth();
    useEffect(() => {
       setTimeout(() => {
          setLoading(false);
       }, 5000);
    }, []);
+   if (!auth?.hash) {
+      return <Login />
+   }
    return (
       <>
          <Toaster />
          {loading && <PrestartScreen dismiss={() => setLoading(false)} />}
 
          <Suspense fallback={<FullsizeSpinner />}>
-            <BrowserRouter>
+         <BrowserRouter>
                {!loading && (
                   <div className="fixed bottom-0 left-0 w-full z-10 p-4 ">
                      <div className="w-full h-16 rounded-xl flex items-center drop-shadow-accent  justify-center gap-2 bg-green-600/75 backdrop-blur-md text-white p-2">
@@ -59,7 +68,7 @@ function App() {
                   <Route path="/controls" element={<FullControls />} />
                   <Route path="/about" element={<FullAbout />} />
                   <Route path="/monitoring-history" element={<MonitoringHistory />} />
-                  
+                  <Route path="/logs" element={<Logs />} />
                   <Route path="*" element={<div>404 | Not found</div>} />
                </Routes>
        
