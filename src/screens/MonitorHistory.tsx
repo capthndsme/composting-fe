@@ -1,6 +1,7 @@
+import StatusDisplay from '@/components/StatusDisplay';
 import { useGetHistoryData } from '../hooks/useServerApi';
 import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
-import StatusDisplay from './StatusDisplay';
+ 
 import { useState } from 'react';
 
 export type GraphableType =
