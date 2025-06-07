@@ -17,8 +17,23 @@ export const logout = () =>
   baseApi.post("/auth/logout");
 
 
+
+/**
+ * Change passwrod:
+ *     const { userId, oldPassword, newPassword } = request.body()
+ */
+
+export const changePassword = async (oldPassword: string, newPassword: string)  => {
+  return baseApi.post(`/auth/change`, {
+    oldPassword,
+    newPassword,
+    userId: localStorage.getItem("_COMP_USER_ID")
+  })
+}
+
 export default {
   validateToken,
   login,
+  changePassword,
   logout
 }
